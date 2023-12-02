@@ -1,1 +1,20 @@
-
+pipeline {
+    agent any
+    tools {
+	maven 'mymaven'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+stage('Deploy') {
+            steps {
+                sshagent(['49133f49-0b63-43dd-a804-b15d29541c2a']) {
+    sh "scp -o StrictHostKeyChecking=no target/*.war ansadmin@192.168.253.138:/home/ansadmin/tomcat/webapps"
+}
+            }
+        }
+    }
+}
